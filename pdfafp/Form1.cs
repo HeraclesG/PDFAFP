@@ -13,6 +13,7 @@ namespace pdfafp
 
         private void button2_Click(object sender, EventArgs e)
         {
+            //PDFTOAFP.CreateFont(@"D:\_Zombie_\_pro\pdf2afp\afps\times\CZTNN00.OLN");
             string pdf_file = lnFile.Text;
             if (string.IsNullOrEmpty(pdf_file))
             {

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("pdfafp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8808a516c9c879b3735ac207d2ddc326fff9dc0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("pdfafp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("pdfafp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

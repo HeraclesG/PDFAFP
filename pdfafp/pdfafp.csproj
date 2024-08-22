@@ -32,7 +32,10 @@
     <None Remove="ext\CZ000002-1" />
     <None Remove="ext\CZ000003" />
     <None Remove="ext\CZ000004" />
+    <None Remove="ext\CZ000009" />
+    <None Remove="ext\CZ000010" />
     <None Remove="ext\CZCO00" />
+    <None Remove="ext\CZTNN00" />
     <None Remove="ext\DZ000001" />
     <None Remove="ext\DZ000002" />
     <None Remove="ext\IM000000" />
@@ -79,7 +82,9 @@
     <EmbeddedResource Include="ext\CZ000002-1" />
     <EmbeddedResource Include="ext\CZ000003" />
     <EmbeddedResource Include="ext\CZ000004" />
+    <EmbeddedResource Include="ext\CZ000009" />
     <EmbeddedResource Include="ext\CZCO00" />
+    <EmbeddedResource Include="ext\CZTNN00" />
     <EmbeddedResource Include="ext\DZ000001" />
     <EmbeddedResource Include="ext\DZ000002" />
     <EmbeddedResource Include="ext\IM000000" />

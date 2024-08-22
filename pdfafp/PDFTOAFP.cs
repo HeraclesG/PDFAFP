@@ -15,6 +15,7 @@ using System.Xml.Linq;
 using System.IO;
 using System.Reflection;
 using System.IO;
+using PdfSharp.Pdf.Content.Objects;
 
 namespace pdfafp
 {
@@ -66,6 +67,80 @@ namespace pdfafp
                     Console.WriteLine($"Text: {text}, Position: ({x}, {y}), Color: {color}, Font: {font.Name}");
                 }
             }*/
+        }
+
+        public static void CreateFont(string filePath)
+        {
+            byte[] inputBytes;
+            int startOffset = 0x00; // Start reading from byte 0x00 (0 decimal)
+            int endOffset = 0x631A;   // Read up to byte 0x23 (35 decimal)
+            string destinationFilePath = @"1.afp";
+            byte[] resultBytes = [];
+            MemoryStream ms = new MemoryStream();
+            try
+            {
+                // Read the entire file contents as a byte array
+                byte[] fileBytes = File.ReadAllBytes(filePath);
+
+                // Extract the desired subset of bytes
+                byte[] desiredBytes = new byte[endOffset - startOffset + 1];
+                Array.Copy(fileBytes, startOffset, desiredBytes, 0, desiredBytes.Length);
+                ms.Write(desiredBytes, 0, desiredBytes.Length);
+                ushort id = 0xee89;
+                byte ide = 0x0c;
+                _WriteSegSize(ms, 0x1f48);
+                _WriteStaticValue(ms, "d3");
+                _WriteShortValue(ms, id);
+                _WriteStaticValue(ms, "0000");
+                _WriteByteValue(ms, ide);
+                _WriteStaticValue(ms, "0000AFA5D098BA0B000B74696D65732E706662");
+                ushort len = 8000;
+                byte[] pfbbytes = File.ReadAllBytes("timesbd.pfb");
+
+
+                ms.Write(pfbbytes, 0, len - 19);
+                _WriteStaticValue(ms, "5a");
+                resultBytes = ms.ToArray();
+
+                int index = (len - 19);
+                int pfbsize = pfbbytes.Length;
+                while ( index < pfbsize - 1)
+                {
+                    ms = new MemoryStream();
+                    ide++;
+                    if ( pfbsize - index < len)
+                    {
+                        len = (ushort)(pfbsize - index);
+                    }
+                    _WriteSegSize(ms, (ushort)(len + 8));
+                    _WriteStaticValue(ms, "d3");
+                    _WriteShortValue(ms, id);
+                    _WriteStaticValue(ms, "0000");
+                    _WriteByteValue(ms, ide);
+                    ms.Write(pfbbytes, index, len);
+                    _WriteStaticValue(ms, "5a");
+
+                    byte[] tempBytes = ms.ToArray();
+                    resultBytes = resultBytes.Concat(tempBytes).ToArray();
+
+
+                    index += len;
+                    Debug.WriteLine($"Finished${index} {pfbsize} {len}");
+
+                }
+                ms.Write(fileBytes, 0x112f6, 16);
+                byte[] tempBytesend = ms.ToArray();
+                resultBytes = resultBytes.Concat(tempBytesend).ToArray();
+                //byte[] resultBytes = ms.ToArray();
+                File.WriteAllBytes(destinationFilePath, resultBytes);
+                Debug.WriteLine("Finished");
+                
+            }
+            catch (IOException ex)
+            {
+                Debug.WriteLine($"Error occurred: {ex.Message}");
+            }
+            
         }
         public static byte[] CreateAFPData()
         {
@@ -320,10 +395,10 @@ namespace pdfafp
             _MCFRG(ms, 5, 2, 142, 0, "XZ000001", 0, 0, 200, 0, "000000000000", "000000000000");
             _MCFRG(ms, 5, 3, 142, 0, "XZ000001", 0, 0, 180, 0, "000000000000", "000000000000");
             _MCFRG(ms, 5, 4, 142, 0, "XZ000002", 0, 0, 220, 0, "000000000000", "000000000000");
-            _MCFRG(ms, 5, 5, 142, 0, "XZ000001", 0, 0, 220, 0, "000000000000", "000000000000");
+            _MCFRG(ms, 5, 5, 142, 0, "XZ000003", 0, 0, 220, 0, "000000000000", "000000000000");
             _MCFRG(ms, 5, 6, 142, 0, "XZ000002", 0, 0, 180, 0, "000000000000", "000000000000");
-            _MCFRG(ms, 5, 7, 142, 0, "XZ000001", 0, 0, 180, 0, "000000000000", "000000000000");
-            _MCFRG(ms, 5, 8, 142, 0, "XZ000002", 0, 0, 180, 0, "000000000000", "000000000000");
+            _MCFRG(ms, 5, 7, 142, 0, "XZ000003", 0, 0, 180, 0, "000000000000", "000000000000");
+            _MCFRG(ms, 5, 8, 142, 0, "XZ000004", 0, 0, 180, 0, "000000000000", "000000000000");
 
         }
         public static void _MCFRG(MemoryStream ms, byte restype, byte reslid, byte fqntype,
